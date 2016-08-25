@@ -1,0 +1,23 @@
+{
+  "name": "oxie",
+  "version": "0.0.0",
+  "description": "Quizgame",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Llano/oxie.git"
+  },
+  "author": "Zacharias Berggren",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Llano/oxie/issues"
+  },
+  "dependencies": {
+    "express": "~4.14.0",
+    "socket.io": "~1.4.8",
+    "mongodb": "~2.2.7"
+  }
+}

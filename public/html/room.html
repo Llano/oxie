@@ -1,0 +1,15 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io('/quiz');
+            socket.on('connect', function() {
+                socket.emit('room', "testroom123");
+            });
+        </script>
+    </body>
+</html>
