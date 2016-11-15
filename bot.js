@@ -1,4 +1,4 @@
-var clientSocket = require('socket.io-client');
+var clientSocket = require('socket.io/node_modules/socket.io-client');
 var Bot = function(nsp) {
     this.people = {};
     var that = this;
