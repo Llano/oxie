@@ -5,7 +5,6 @@ var getRoom = function(roomid, callback) {
     db.pool.getConnection(function(err, connection) {
         if(err) { console.log(err); callback(true); return; }
         connection.query(sql, [roomid], function(err, result) {
-            console.log(result);
 
             connection.release();
             callback(result);
@@ -14,6 +13,19 @@ var getRoom = function(roomid, callback) {
 
 }
 
+var getRooms = function(callback) {
+    var sql = "SELECT * FROM rooms";
+    db.pool.getConnection(function(err, connection) {
+        if(err) { console.log(err); callback(true); return; }
+        connection.query(sql, function(err, result) {
+
+            connection.release();
+            callback(result);
+        })
+    });
+}
+
 module.exports = {
-    getRoom: getRoom
+    getRoom: getRoom,
+    getRooms: getRooms
 }
