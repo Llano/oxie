@@ -1,22 +1,26 @@
-var app         = require('express')();
-var express = require('express');
-var http          = require('http').Server(app);
-var io              = require('socket.io')(http);
-var path            = require('path');
-var roomModel = require("./modals/room");
-var auth = require("./helpers/auth");
-var bodyParser = require('body-parser');
-var userModel = require('./modals/users');
+var app          = require('express')();
+var express      = require('express');
+var http         = require('http').Server(app);
+var io           = require('socket.io')(http);
+var path         = require('path');
+var roomModel    = require("./modals/room")/*(process.argv.length>2 ? process.argv[2] : "localhost",
+                                            process.argv.length>3 ? process.argv[3] : "root",
+											process.argv.length>4 ? process.argv[4] : "")*/;
+var userModel    = require('./modals/users')/*(process.argv.length>2 ? process.argv[2] : "localhost",
+                                             process.argv.length>3 ? process.argv[3] : "root",
+											 process.argv.length>4 ? process.argv[4] : "")*/;
+var auth         = require("./helpers/auth");
+var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser')();
-var session = require('cookie-session')({secret: 'secret', maxAge: 30 * 24 * 60 * 60 * 1000});
-var bot = require('./bot.js');
-var auth = require('./helpers/auth.js');
+var session      = require('cookie-session')({secret: 'secret', maxAge: 30 * 24 * 60 * 60 * 1000});
+var bot          = require('./bot.js');
+var auth         = require('./helpers/auth.js');
 
-
-
+var port        = process.argv.length>5 ? process.argv[5] : 3000;
 
 var bots = {};
 var nsp = {};
+
 roomModel.getRooms(function(rooms) {
     for (var i = 0; i < rooms.length; i++) {
         //bots[rooms[i].url] = new bot.Bot(rooms[i].url);
@@ -112,7 +116,7 @@ app.post("/login", function(req, res) {
         }
     })
 });
-var port = process.argv.length>2 ? process.argv[2] : 3000;
+
 http.listen(port, function() {
     console.log("Running on port "+port+"...");
 });

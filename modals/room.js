@@ -1,8 +1,8 @@
-var db = require('./db');
+var db = require('./db')("localhost","root","pw");
 
 var getRoom = function(roomid, callback) {
     var sql = "SELECT * FROM rooms WHERE url = ?";
-    db.pool.getConnection(function(err, connection) {
+    db.getConnection(function(err, connection) {
         if(err) { console.log(err); callback(true); return; }
         connection.query(sql, [roomid], function(err, result) {
 
@@ -15,7 +15,7 @@ var getRoom = function(roomid, callback) {
 
 var getRooms = function(callback) {
     var sql = "SELECT * FROM rooms";
-    db.pool.getConnection(function(err, connection) {
+    db.getConnection(function(err, connection) {
         if(err) { console.log(err); callback(true); return; }
         connection.query(sql, function(err, result) {
 
