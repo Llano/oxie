@@ -14,11 +14,18 @@ window.MainWindow = React.createClass({
         socket.on("user:joined", this.userJoined);
         socket.on("user:left", this.userLeft);
         socket.on("user:list", this.userList);
+        socket.on("user:point", this.userPoint);
     },
     onConnect: function(s) {
         this.setState({socket: s, username: this.props.username});
         //s.emit('room', {room: this.props.room.url, username: this.state.username});
         s.emit('user:joined', {username: this.state.username});
+    },
+    userPoint: function(data) {
+        console.log(this.state.users);
+        var users = this.state.users;
+        users[data.id].points = data.points;;
+        this.setState({users: users});
     },
     userMessage: function(data) {
         console.log(data);
@@ -33,7 +40,7 @@ window.MainWindow = React.createClass({
     },
     userJoined: function(data) {
         var users = this.state.users;
-        users[data.id] = [data.username, null];
+        users[data.id] = data;
         this.setState({users: users});
     },
     userLeft: function(data) {
@@ -131,7 +138,7 @@ var UserList = React.createClass({
                 <ul>
                 {
                     Object.keys(users).map(function(key) {
-                        return <li key={key}>{users[key]}</li>;
+                        return <li key={key}>{users[key].username + " - " + users[key].points}</li>;
                     })
                 }
 
