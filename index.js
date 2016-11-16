@@ -32,13 +32,14 @@ roomModel.getRooms(function(rooms) {
 
 
 var stdin = process.openStdin();
-
 stdin.addListener("data", function(d) {
+
     // note:  d is an object, and when converted to a string it will
     // end with a linefeed.  so we (rather crudely) account for that
     // with toString() and then trim()
     var cmd = d.toString().trim();
     if(cmd == "cs") {
+        console.log("USERS ONLINE");
         for(var room in nsp) {
             console.log("----" + room + "----");
             for(var user in nsp[room].people) {
@@ -46,6 +47,7 @@ stdin.addListener("data", function(d) {
             }
         }
     }
+    process.stdout.write("oxie%: ");
   });
 
 app.use(cookieParser);
@@ -118,4 +120,5 @@ app.post("/login", function(req, res) {
 
 http.listen(port, function() {
     console.log("Running on port "+port+"...");
+    process.stdout.write("oxie%: ");
 });
