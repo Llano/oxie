@@ -3,12 +3,12 @@ var express      = require('express');
 var http         = require('http').Server(app);
 var io           = require('socket.io')(http);
 var path         = require('path');
-var roomModel    = require("./modals/room")/*(process.argv.length>2 ? process.argv[2] : "localhost",
+var roomModel    = require("./modals/room")(process.argv.length>2 ? process.argv[2] : "localhost",
                                             process.argv.length>3 ? process.argv[3] : "root",
-											process.argv.length>4 ? process.argv[4] : "")*/;
-var userModel    = require('./modals/users')/*(process.argv.length>2 ? process.argv[2] : "localhost",
+											process.argv.length>4 ? process.argv[4] : "");
+var userModel    = require('./modals/users')(process.argv.length>2 ? process.argv[2] : "localhost",
                                              process.argv.length>3 ? process.argv[3] : "root",
-											 process.argv.length>4 ? process.argv[4] : "")*/;
+											 process.argv.length>4 ? process.argv[4] : "");
 var auth         = require("./helpers/auth");
 var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser')();
