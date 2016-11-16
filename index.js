@@ -101,6 +101,7 @@ app.post("/login", function(req, res) {
         }
     })
 });
-http.listen(3000, function() {
-    console.log("Running on port 3000..");
+var port = process.argv.length>2 ? process.argv[2] : 3000;
+http.listen(port, function() {
+    console.log("Running on port "+port+"...");
 });
