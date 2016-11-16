@@ -7,20 +7,16 @@ window.MainWindow = React.createClass({
 
     },
     componentWillMount: function() {
-        var socket = io('/quiz');
-        var that = this;
-        socket.on('connect', function() {
-            that.onConnect(socket);
-        });
 
-        var room = {};
+        console.log(this.props.rooms);
+        /*var room = {};
         for (var i = 0; i < this.props.rooms.length; i++) {
             room[this.props.rooms[i].url] = [[]];
-        }
+        }*/
 
-        this.setState({rooms: room});
+        this.setState({rooms: this.props.rooms});
     },
-    onConnect: function(s) {
+    /*onConnect: function(s) {
         var that = this;
         this.setState({socket: s});
         for (var i = 0; i < this.props.rooms.length; i++) {
@@ -43,7 +39,7 @@ window.MainWindow = React.createClass({
 
 
 
-    },
+    },*/
     render: function() {
         var re = null;
         return (
@@ -63,8 +59,7 @@ var RoomList = React.createClass({
                 {
                     Object.keys(rooms).map(function(key) {
 
-                        var numbers = rooms[key][0].length;
-                        return <li key={key}>{"Name: " + key + " -- Number of users: " + numbers}</li>;
+                        return <li key={rooms[key].id}>{"Name: " + rooms[key].id + " -- users: " + Object.values(rooms[key].people[0]).length}</li>
                     })
 
 

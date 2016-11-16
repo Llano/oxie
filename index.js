@@ -11,7 +11,6 @@ var cookieSession = require('cookie-session');
 var bot = require('./bot.js');
 
 
-var quizIO = io.of('/quiz');
 
 var bots = {};
 var nsp = {};
@@ -62,8 +61,11 @@ app.get("/" ,function(req, res) {
 
 app.get("/rooms", function(req, res) {
     roomModel.getRooms(function(rooms) {
-        console.log(rooms);
-        res.render('pages/rooms', {rooms: rooms});
+        var r = {};
+        for (var i = 0; i < rooms.length; i++) {
+            r[rooms[i].url] = {'id': rooms[i].id, 'title': rooms[i].title, people: [nsp[rooms[i].url].people]}
+        }
+        res.render('pages/rooms', {rooms: r});
     })
 
 })
