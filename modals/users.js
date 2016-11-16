@@ -1,5 +1,4 @@
-module.exports = function(host, user, password){
-	var db = require('./db')(host, user, password);
+module.exports = function(db){
 
 	var authenticate = function(email, password, callback) {
 		var sql = "SELECT * FROM users WHERE email = ? AND password = ?";

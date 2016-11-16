@@ -1,5 +1,4 @@
-module.exports = function(host,user,password){
-    var db = require('./db')(host, user, password);
+module.exports = function(db){
 
 	var getRoom = function(roomid, callback) {
 		var sql = "SELECT * FROM rooms WHERE url = ?";
@@ -24,7 +23,7 @@ module.exports = function(host,user,password){
 			})
 		});
 	}
-	
+
 	return {getRoom: getRoom,
     getRooms: getRooms}
 }
