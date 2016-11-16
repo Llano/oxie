@@ -14,7 +14,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/babel" src="/js/room.js"></script>
         <script type="text/babel">
-            ReactDOM.render(<window.MainWindow room={<%- JSON.stringify(room) %>}/>, document.getElementById("container"));
+            ReactDOM.render(<window.MainWindow room={<%- JSON.stringify(room) %>} username={<%- JSON.stringify(username) %>}/>, document.getElementById("container"));
         </script>
     </body>
 </html>

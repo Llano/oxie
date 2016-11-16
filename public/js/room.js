@@ -1,9 +1,10 @@
 window.MainWindow = React.createClass({
     getInitialState: function() {
-        return {socket: null, messages: [], username: 'testuser', users:[]};
+        return {socket: null, messages: [], username: null, users:[]};
     },
     componentDidMount: function() {
         //var socket = io('/quiz');
+
         var socket = io('/' + this.props.room.url);
         var that = this;
         socket.on('connect', function() {
@@ -15,7 +16,7 @@ window.MainWindow = React.createClass({
         socket.on("user:list", this.userList);
     },
     onConnect: function(s) {
-        this.setState({socket: s});
+        this.setState({socket: s, username: this.props.username});
         //s.emit('room', {room: this.props.room.url, username: this.state.username});
         s.emit('user:joined', {username: this.state.username});
     },

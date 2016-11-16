@@ -7,11 +7,13 @@ var roomModel = require("./modals/room");
 var auth = require("./helpers/auth");
 var bodyParser = require('body-parser');
 var userModel = require('./modals/users');
-var cookieSession = require('cookie-session');
+var cookieParser = require('cookie-parser')();
+var session = require('cookie-session')({secret: 'secret', maxAge: 30 * 24 * 60 * 60 * 1000});
 var bot = require('./bot.js');
+var auth = require('./helpers/auth.js');
 
 
-var quizIO = io.of('/quiz');
+
 
 var bots = {};
 var nsp = {};
@@ -43,17 +45,22 @@ stdin.addListener("data", function(d) {
     }
   });
 
-app.use(cookieSession({
-  name: 'session',
-  keys: ['herpderp'],
-
-  // Cookie Options
-  maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-}));
+app.use(cookieParser);
+app.use(session);
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+io.use(function(socket, next) {
+    var req = socket.handshake;
+    var res = {};
+    cookieParser(req, res, function(err) {
+        if (err) return next(err);
+        session(req, res, next);
+    });
+});
+
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.get("/" ,function(req, res) {
@@ -62,8 +69,11 @@ app.get("/" ,function(req, res) {
 
 app.get("/rooms", function(req, res) {
     roomModel.getRooms(function(rooms) {
-        console.log(rooms);
-        res.render('pages/rooms', {rooms: rooms});
+        var r = {};
+        for (var i = 0; i < rooms.length; i++) {
+            r[rooms[i].url] = {'id': rooms[i].id, 'title': rooms[i].title, people: [nsp[rooms[i].url].people]}
+        }
+        res.render('pages/rooms', {rooms: r});
     })
 
 })
@@ -78,8 +88,8 @@ app.param("roomid", function(req, res, next, roomid) {
         }
     })
 });
-app.get("/room/:roomid", function(req, res) {
-    res.render('pages/room', {room: req.room[0]});
+app.get("/room/:roomid", auth.requireLoggedin, function(req, res) {
+    res.render('pages/room', {room: req.room[0], username: req.session.username});
 });
 
 app.get("/login", function(req, res) {
@@ -94,6 +104,7 @@ app.post("/login", function(req, res) {
     userModel.authenticate(req.body.email, req.body.password, function(result) {
         if(result.length > 0) {
             req.session.user_id = result[0].id;
+            req.session.username = result[0].username;
             res.redirect("/");
         }
         else {

@@ -5,7 +5,6 @@ var authenticate = function(email, password, callback) {
     db.pool.getConnection(function(err, connection) {
         if(err) { console.log(err); callback(true); return; }
         connection.query(sql, [email, password], function(err, result) {
-            console.log(result);
 
             connection.release();
             callback(result);
