@@ -13,7 +13,7 @@ var Bot = function(nsp) {
     nsp.on('connection', function(s){
         that.socket = s;
         s.on('user:joined', function(data) {that.joined(data, s)});
-        s.on('disconnect', function(data) {that.leave(data, s)});
+        s.on('disconnecting', function() {that.leave(s)});
         s.on('user:message', function(data) {that.message(data, s)});
 
     });
@@ -28,7 +28,7 @@ Bot.prototype.message = function(data, socket) {
         this.onCorrectAnswer(data, socket);
     }
 }
-Bot.prototype.leave = function(data, socket) {
+Bot.prototype.leave = function(socket) {
     if(Object.keys(this.people).length < 1) {
         this.onEmtpyRoom();
     }
