@@ -81,13 +81,14 @@ Bot.prototype.onCorrectAnswer = function(data, socket) {
 }
 Bot.prototype.onNoCorrectAnswer = function() {
     this.nsp.emit("user:message", {username: "System", message: "Correct answer: " + this.currentQuestion.results[0].correct_answer});
+    this.clearTimers();
     this.sendQuestion();
 
 }
 
 Bot.prototype.fetchQuestion = function(callback) {
     var that = this;
-    request('https://opentdb.com/api.php?amount=1', function (error, response, body) {
+    request('https://www.opentdb.com/api.php?amount=1&category=9&difficulty=easy', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var json = JSON.parse(body);
             that.currentQuestion = json;
