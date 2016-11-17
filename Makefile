@@ -1,4 +1,4 @@
-DBHOST ?=  $(shell bash -c 'read -p "DB-Host: " host;echo $$host')
+DBUSER ?=  $(shell bash -c 'read -p "DB-User: " dbuser;echo $$dbuser')
 .PHONY: install
 install:
 	@npm install
