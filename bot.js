@@ -1,5 +1,6 @@
-var clientSocket = require('socket.io/node_modules/socket.io-client');
 var request = require('request');
+var striptags = require('striptags');
+var strip
 var Bot = function(nsp) {
     this.people = {};
     var that = this;
@@ -10,6 +11,9 @@ var Bot = function(nsp) {
     this.timeOutTwo = null;
     this.running = false;
     this.currentQuestion = null;
+    this.userColor = '#084C61';
+    this.name = 'System';
+    this.adminColor = '#DB3A34';
     nsp.on('connection', function(s){
         that.socket = s;
         s.on('user:joined', function(data) {that.joined(data, s)});
@@ -23,9 +27,10 @@ var Bot = function(nsp) {
 
 
 Bot.prototype.message = function(data, socket) {
-    socket.broadcast.emit('user:message', {username: this.people[socket.id].username, message: data});
-    if(data.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
-        this.onCorrectAnswer(data, socket);
+    var message = this.formatMessage(socket, data)
+    this.nsp.emit('user:message', message);
+    if(message.message.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
+        this.onCorrectAnswer(message.message, socket);
     }
 }
 Bot.prototype.leave = function(socket) {
@@ -33,12 +38,15 @@ Bot.prototype.leave = function(socket) {
         this.onEmtpyRoom();
     }
     socket.broadcast.emit("user:left", {username: this.people[socket.id].username, id: socket.id});
-    delete this.people[socket.id]; //TODO use splice
+    if(socket.id in this.people) {
+        delete this.people[socket.id];
+    }
+
 }
 
 Bot.prototype.joined = function(data, socket) {
 
-    socket.emit("user:message", {username: "System", message: "You joined a room. Welcome..!"});
+    this.systemMessageClient(socket, "You joined a room. Welcome..!");
     this.people[socket.id] = {username: data.username, points: 0};
     socket.broadcast.emit("user:joined", {username: this.people[socket.id].username, id: socket.id, points: this.people[socket.id].points});
     socket.emit("user:list", {people: this.people});
@@ -46,6 +54,27 @@ Bot.prototype.joined = function(data, socket) {
         this.onPopulatedRoom();
     }
 
+}
+
+Bot.prototype.formatMessage = function(socket, message) {
+
+    var fm = null;
+    switch (socket.handshake.session.role) {
+
+        //Normal user
+        case 0:
+            fm = {username: this.people[socket.id].username, message: striptags(message)}
+            break;
+
+        //Admin
+        case 1:
+            fm = {username: "<span style='color:"+ this.adminColor +"'>" + this.people[socket.id].username + "</span>", message: message}
+
+            break;
+
+    }
+
+    return fm;
 }
 
 Bot.prototype.onEmtpyRoom = function() {
@@ -72,7 +101,7 @@ Bot.prototype.clearTimers = function() {
     clearTimeout(this.timeOutTwo);
 }
 Bot.prototype.onCorrectAnswer = function(data, socket) {
-    this.nsp.emit("user:message", {username: "System", message: this.people[socket.id].username + " answered correctly with: " + data});
+    this.systemMessageNsp(this.people[socket.id].username + " answered correctly with: " + data);
     this.people[socket.id].points = this.people[socket.id].points + 1;
     this.nsp.emit("user:point", {username: this.people[socket.id].username, id: socket.id, points: this.people[socket.id].points});
 
@@ -80,10 +109,17 @@ Bot.prototype.onCorrectAnswer = function(data, socket) {
     this.sendQuestion();
 }
 Bot.prototype.onNoCorrectAnswer = function() {
-    this.nsp.emit("user:message", {username: "System", message: "Correct answer: " + this.currentQuestion.results[0].correct_answer});
+    this.systemMessageNsp("Correct answer: " + this.currentQuestion.results[0].correct_answer);
     this.clearTimers();
     this.sendQuestion();
 
+}
+
+Bot.prototype.systemMessageClient = function(socket, message) {
+    socket.emit("user:message", {username: "<span style='color:"+ this.userColor +"'>" + this.name + "</span>", message: message});
+}
+Bot.prototype.systemMessageNsp = function(message) {
+    this.nsp.emit("user:message", {username: "<span style='color:"+ this.userColor +"'>" + this.name + "</span>", message: message});
 }
 
 Bot.prototype.fetchQuestion = function(callback) {
@@ -101,17 +137,17 @@ Bot.prototype.sendQuestion = function() {
     this.fetchQuestion(function() {
 
 
-        that.nsp.emit("user:message", {username: "System", message: "New question in 5 seconds.."});
+        that.systemMessageNsp("New question in 5 seconds..");
 
 
         setTimeout(function() {
 
-            that.nsp.emit("user:message", {username: "System", message: that.currentQuestion.results[0].question});
+            that.systemMessageNsp(that.currentQuestion.results[0].question);
             that.interval = setInterval(function() {
-                that.nsp.emit("user:message", {username: "System", message: "Hint 1: " + (that.currentQuestion.results[0].correct_answer).replace(/./g, '_ ')});
+                that.systemMessageNsp("Hint 1: " + (that.currentQuestion.results[0].correct_answer).replace(/./g, '_ '));
                 clearInterval(that.interval);
                 that.timeOutOne = setTimeout(function() {
-                    that.nsp.emit("user:message", {username: "System", message: "Hint 2: " + that.makeHint(that.currentQuestion.results[0].correct_answer)});
+                    that.systemMessageNsp("Hint 2: " + that.makeHint(that.currentQuestion.results[0].correct_answer));
 
                     that.timeOutTwo = setTimeout(function() {
                         that.onNoCorrectAnswer();

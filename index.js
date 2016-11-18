@@ -20,13 +20,6 @@ var port        = process.argv.length>5 ? process.argv[5] : 3000;
 var bots = {};
 var nsp = {};
 
-roomModel.getRooms(function(rooms) {
-    for (var i = 0; i < rooms.length; i++) {
-        //bots[rooms[i].url] = new bot.Bot(rooms[i].url);
-        nsp[rooms[i].url] = new bot.Bot(io.of(rooms[i].url));
-
-    }
-})
 
 
 
@@ -43,7 +36,7 @@ stdin.addListener("data", function(d) {
         for(var room in nsp) {
             console.log("----" + room + "----");
             for(var user in nsp[room].people) {
-                console.log(nsp[room].people[user]);
+                console.log(nsp[room].people[user].username);
             }
         }
     }
@@ -57,20 +50,31 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-io.use(function(socket, next) {
-    var req = socket.handshake;
-    var res = {};
-    cookieParser(req, res, function(err) {
-        if (err) return next(err);
-        session(req, res, next);
-    });
-});
+
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.get("/" ,function(req, res) {
     res.render('pages/index');
 });
+
+roomModel.getRooms(function(rooms) {
+    for (var i = 0; i < rooms.length; i++) {
+        //bots[rooms[i].url] = new bot.Bot(rooms[i].url);
+        nsp[rooms[i].url] = new bot.Bot(io.of(rooms[i].url));
+        io.of(rooms[i].url).use(function(socket, next) {
+            var req = socket.handshake;
+            var res = {};
+            cookieParser(req, res, function(err) {
+                if (err) return next(err);
+                session(req, res, next);
+            });
+        });
+
+
+    }
+})
+
 
 app.get("/rooms", function(req, res) {
     roomModel.getRooms(function(rooms) {
@@ -110,6 +114,7 @@ app.post("/login", function(req, res) {
         if(result.length > 0) {
             req.session.user_id = result[0].id;
             req.session.username = result[0].username;
+            req.session.role = result[0].role;
             res.redirect("/");
         }
         else {

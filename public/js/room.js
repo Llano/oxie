@@ -50,12 +50,8 @@ window.MainWindow = React.createClass({
 
     },
     handleMessageSubmit: function (message) {
-        var {messages} = this.state;
-        messages.push({username: this.state.username, message: message});
-        this.setState({messages});
         this.state.socket.emit('user:message', message);
-        var elem = document.getElementById('message-content');
-        elem.scrollTop = elem.scrollHeight;
+
 
     },
     componentDidUpdate: function() {
@@ -66,11 +62,29 @@ window.MainWindow = React.createClass({
 
         return (
             <div>
-                <div id="top">
-                    <MessageList messages={this.state.messages}/>
-                    <UserList users={this.state.users}/>
+                <Header />
+                <div id="content">
+                    <div className="row">
+                        <div className="eight float-left">
+                            <MessageList messages={this.state.messages}/>
+                        </div>
+                        <div className="two float-right">
+                        <div className="box">
+                            <div className="box-head">
+                                Users
+                                </div>
+                                <div className="box-body">
+                                    <UserList users={this.state.users}/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <MessageForm onMessageSubmit={this.handleMessageSubmit}/>
+                    </div>
                 </div>
-                <MessageForm onMessageSubmit={this.handleMessageSubmit}/>
+
 
             </div>
         )
@@ -84,7 +98,7 @@ var MessageList = React.createClass({
                 {
                     this.props.messages.map((message, i) => {
                         return (
-                              <div key={i}>{message.username + ": " + message.message}</div>
+                              <div key={i} dangerouslySetInnerHTML={{__html: message.username + ": " + message.message}}></div>
                           );
                       })
                   }
@@ -133,8 +147,7 @@ var UserList = React.createClass({
     render() {
         var users = this.props.users;
         return (
-            <div id="user_list">
-                <h3>Users</h3>
+            <div>
                 <ul>
                 {
                     Object.keys(users).map(function(key) {
@@ -144,6 +157,35 @@ var UserList = React.createClass({
 
 
                 </ul>
+            </div>
+        )
+    }
+})
+
+var Header = React.createClass({
+    getInitialState: function() {
+        return {};
+    },
+    render: function() {
+        return (
+            <div id="header"></div>
+        )
+    }
+})
+
+var Box = React.createClass({
+    getInitialState: function() {
+        return {};
+    },
+    render: function() {
+        return (
+            <div className="box">
+                <div className="box-head">
+                    Test
+                </div>
+                <div className="box-body">
+                    TestTestTestTestTest
+                </div>
             </div>
         )
     }
