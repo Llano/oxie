@@ -1,6 +1,6 @@
 var request = require('request');
 var striptags = require('striptags');
-var strip
+var userModel = require('./modals/users');
 var Bot = function(nsp) {
     this.people = {};
     var that = this;
@@ -38,6 +38,7 @@ Bot.prototype.leave = function(socket) {
         this.onEmtpyRoom();
     }
     socket.broadcast.emit("user:left", {username: this.people[socket.id].username, id: socket.id});
+    userModel.updatePoints(this.people[socket.id].points, socket.handshake.session.user_id);
     if(socket.id in this.people) {
         delete this.people[socket.id];
     }

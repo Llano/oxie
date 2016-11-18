@@ -3,24 +3,20 @@ var express      = require('express');
 var http         = require('http').Server(app);
 var io           = require('socket.io')(http);
 var path         = require('path');
-var db           = require('./modals/db')(process.argv.length>2 ? process.argv[2] : "localhost",
-                                            process.argv.length>3 ? process.argv[3] : "root",
-											process.argv.length>4 ? process.argv[4] : "");
-var roomModel    = require("./modals/room")(db);
-var userModel    = require('./modals/users')(db);
+var db           = require('./modals/db');
+var roomModel    = require("./modals/room");
+var userModel    = require('./modals/users');
 var auth         = require("./helpers/auth");
 var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser')();
 var session      = require('cookie-session')({secret: 'secret', maxAge: 30 * 24 * 60 * 60 * 1000});
 var bot          = require('./bot.js');
 var auth         = require('./helpers/auth.js');
+var config       = require('./config');
 
-var port        = process.argv.length>5 ? process.argv[5] : 3000;
 
 var bots = {};
 var nsp = {};
-
-
 
 
 
@@ -123,7 +119,7 @@ app.post("/login", function(req, res) {
     })
 });
 
-http.listen(port, function() {
-    console.log("Running on port "+port+"...");
+http.listen(config.port, function() {
+    console.log("Running on port "+ config.port +"...");
     process.stdout.write("oxie%: ");
 });

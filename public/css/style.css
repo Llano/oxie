@@ -75,6 +75,10 @@ body{
     padding: 10px;
     background-color: #ffffff;
 }
+.box ul
+{
+    list-style-type: none;
+}
 
 .row
 {

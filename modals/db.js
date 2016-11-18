@@ -1,10 +1,11 @@
 var mysql = require('mysql');
+var config = require('../config');
 
-module.exports = function(host,user,password) {
-	return mysql.createPool({
-		host: host,
-		user: user,
-		password: password,
-		database: 'oxie'
-	});
-}
+var pool = mysql.createPool({
+	host: config.databaseHost,
+	user: config.databaseUsername,
+	password: config.databasePassword,
+	database: 'oxie'
+});
+
+exports.pool = pool;
