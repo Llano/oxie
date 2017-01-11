@@ -125,7 +125,7 @@ Bot.prototype.systemMessageNsp = function(message) {
 
 Bot.prototype.fetchQuestion = function(callback) {
     var that = this;
-    request('https://www.opentdb.com/api.php?amount=1&category=9&difficulty=easy', function (error, response, body) {
+    request('https://www.opentdb.com/api.php?amount=1&difficulty=easy&type=multiple', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var json = JSON.parse(body);
             that.currentQuestion = json;
@@ -145,7 +145,7 @@ Bot.prototype.sendQuestion = function() {
 
             that.systemMessageNsp(that.currentQuestion.results[0].question);
             that.interval = setInterval(function() {
-                that.systemMessageNsp("Hint 1: " + (that.currentQuestion.results[0].correct_answer).replace(/./g, '_ '));
+                that.systemMessageNsp("Hint 1: " + (that.currentQuestion.results[0].correct_answer).replace(/[^' ']/g, '_ ').replace(/ /g, "\xa0\xa0"));
                 clearInterval(that.interval);
                 that.timeOutOne = setTimeout(function() {
                     that.systemMessageNsp("Hint 2: " + that.makeHint(that.currentQuestion.results[0].correct_answer));
@@ -175,10 +175,21 @@ Bot.prototype.sendQuestion = function() {
 
 Bot.prototype.makeHint = function(str) {
     var s = str.split("");
-    for (var i = 0; i < s.length; i+=2) {
-        s[i] = ' _ '
+    for (var i = 0; i < s.length; i++) {
+        if(!/[^0-9a-zA-Z]/.test(s[i]))
+        {
+            if(i % 2 == 0)
+            {
+                s[i] = ' _ '
+            }
+        }
+        else {
+            if(/\s/.test(s[i]))
+            {
+                s[i] = '&nbsp &nbsp';
+            }
+        }
     }
-
     return s.join("");
 }
 

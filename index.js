@@ -64,6 +64,11 @@ roomModel.getRooms(function(rooms) {
             cookieParser(req, res, function(err) {
                 if (err) return next(err);
                 session(req, res, next);
+
+                //Authenticate socket
+                if(!socket.handshake.session) {
+                    next("Not authorized");
+                }
             });
         });
 

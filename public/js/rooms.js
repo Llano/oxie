@@ -55,17 +55,20 @@ var RoomList = React.createClass({
         return (
 
             <div>
-                <ul>
-                {
-                    Object.keys(rooms).map(function(key) {
+                <window.Header />
+                    <div id="content">
+                    <ul>
+                    {
+                        Object.keys(rooms).map(function(key) {
 
-                        return <li key={rooms[key].id}>{"Name: " + rooms[key].title + " -- users: " + Object.values(rooms[key].people[0]).length}</li>
-                    })
+                            return <li key={rooms[key].id}>{"Name: " + rooms[key].title + " -- users: " + Object.values(rooms[key].people[0]).length}</li>
+                        })
 
 
-                }
+                    }
 
-                </ul>
+                    </ul>
+                </div>
 
             </div>
 

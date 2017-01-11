@@ -13,6 +13,7 @@
         </div>
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/babel" src="/js/room.js"></script>
+        <script type="text/babel" src="/js/templates.js"></script>
         <script type="text/babel">
             ReactDOM.render(<window.MainWindow room={<%- JSON.stringify(room) %>} username={<%- JSON.stringify(username) %>}/>, document.getElementById("container"));
         </script>

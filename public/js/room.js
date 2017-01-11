@@ -62,7 +62,7 @@ window.MainWindow = React.createClass({
 
         return (
             <div>
-                <Header />
+                <window.Header />
                 <div id="content">
                     <div className="row">
                         <div className="eight float-left">
@@ -162,16 +162,7 @@ var UserList = React.createClass({
     }
 })
 
-var Header = React.createClass({
-    getInitialState: function() {
-        return {};
-    },
-    render: function() {
-        return (
-            <div id="header"></div>
-        )
-    }
-})
+
 
 var Box = React.createClass({
     getInitialState: function() {
