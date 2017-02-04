@@ -55,20 +55,17 @@ var RoomList = React.createClass({
         return (
 
             <div>
-                <window.Header />
-                    <div id="content">
-                    <ul>
+                    <ul className="collection">
                     {
                         Object.keys(rooms).map(function(key) {
 
-                            return <li key={rooms[key].id}>{"Name: " + rooms[key].title + " -- users: " + Object.values(rooms[key].people[0]).length}</li>
+                            return <li className="collection-item avatar" key={rooms[key].id}><img src="http://placehold.it/50x50" className="circle" /><span className="title"><a href={"/room/" + rooms[key].url}>{rooms[key].title}</a></span><p>{"Online: " + Object.values(rooms[key].people[0]).length}</p></li>
                         })
 
 
                     }
 
                     </ul>
-                </div>
 
             </div>
 

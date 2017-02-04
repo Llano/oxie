@@ -62,27 +62,21 @@ window.MainWindow = React.createClass({
 
         return (
             <div>
-                <window.Header />
-                <div id="content">
-                    <div className="row">
-                        <div className="eight float-left">
-                            <MessageList messages={this.state.messages}/>
-                        </div>
-                        <div className="two float-right">
-                        <div className="box">
-                            <div className="box-head">
-                                Users
-                                </div>
-                                <div className="box-body">
-                                    <UserList users={this.state.users}/>
-                                </div>
-                            </div>
+                <div className="chip">
+                    <img src="http://placehold.it/50x50" alt="Contact Person" />
+                    {this.props.room.title}
+                </div>
+                <div className="row">
 
-                        </div>
+                    <div className="col s8">
+                        <MessageList messages={this.state.messages}/>
                     </div>
-                    <div>
-                        <MessageForm onMessageSubmit={this.handleMessageSubmit}/>
+                    <div className="col s4">
+                        <UserList users={this.state.users}/>
                     </div>
+                </div>
+                <div>
+                    <MessageForm onMessageSubmit={this.handleMessageSubmit}/>
                 </div>
 
 
@@ -148,10 +142,10 @@ var UserList = React.createClass({
         var users = this.props.users;
         return (
             <div>
-                <ul>
+                <ul className="collection">
                 {
                     Object.keys(users).map(function(key) {
-                        return <li key={key}>{users[key].username + " - " + users[key].points}</li>;
+                        return <li className="collection-item avatar" key={key}><img src="http://placehold.it/50x50" className="circle" /><span className="title">{users[key].username}</span><p>{users[key].points}</p></li>;
                     })
                 }
 

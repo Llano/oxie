@@ -81,7 +81,7 @@ app.get("/rooms", function(req, res) {
     roomModel.getRooms(function(rooms) {
         var r = {};
         for (var i = 0; i < rooms.length; i++) {
-            r[rooms[i].url] = {'id': rooms[i].id, 'title': rooms[i].title, people: [nsp[rooms[i].url].people]}
+            r[rooms[i].url] = {'id': rooms[i].id, 'title': rooms[i].title, people: [nsp[rooms[i].url].people], 'url': rooms[i].url}
         }
         res.render('pages/rooms', {rooms: r});
     })
@@ -109,6 +109,10 @@ app.get("/login", function(req, res) {
 app.get("/logout", function(req, res) {
     req.session = null;
     res.redirect("/");
+});
+
+app.get("/question/add", function(req, res) {
+
 });
 app.post("/login", function(req, res) {
     userModel.authenticate(req.body.email, req.body.password, function(result) {

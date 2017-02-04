@@ -1,28 +1,27 @@
 <html>
-    <head>
-        <script src="https://npmcdn.com/react@15.3.0/dist/react.js"></script>
-        <script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.js"></script>
-        <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/css/style.css">
+<head>
+    <script src="https://npmcdn.com/react@15.3.0/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/babel" src="/js/templates.js"></script>
 
-    </head>
+</head>
 
-    <body>
-        <div id="hhead">
-
-        </div>
-
-
-
-        <script src="/socket.io/socket.io.js"></script>
-        <script type="text/babel" src="/js/templates.js"></script>
-        <script type="text/babel">
-            ReactDOM.render(<window.Header />, document.getElementById("hhead"));
-        </script>
-
-
-
-
-
-
-</html>
+<body>
+    <div class="row">
+        <nav>
+            <div class="nav-wrapper">
+                <div class="col s12">
+                    <a href="/" class="brand-logo">Logo</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="/rooms">Rooms</a></li>
+                        <li><a href="badges.html">Components</a></li>
+                        <li><a href="collapsible.html">JavaScript</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>

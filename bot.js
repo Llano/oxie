@@ -28,10 +28,14 @@ var Bot = function(nsp) {
 
 Bot.prototype.message = function(data, socket) {
     var message = this.formatMessage(socket, data)
-    this.nsp.emit('user:message', message);
-    if(message.message.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
-        this.onCorrectAnswer(message.message, socket);
+    if(message != null)
+    {
+        this.nsp.emit('user:message', message);
+        if(message.message.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
+            this.onCorrectAnswer(message.message, socket);
+        }
     }
+
 }
 Bot.prototype.leave = function(socket) {
     if(Object.keys(this.people).length < 1) {
@@ -64,7 +68,8 @@ Bot.prototype.formatMessage = function(socket, message) {
 
         //Normal user
         case 0:
-            fm = {username: this.people[socket.id].username, message: striptags(message)}
+            if(message.length < 800)
+                fm = {username: this.people[socket.id].username, message: striptags(message)}
             break;
 
         //Admin

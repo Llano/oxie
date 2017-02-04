@@ -1,14 +1,21 @@
-<html>
-    <head>
+<%- include ../templates/header.ejs %>
 
-    </head>
+    <div class="container">
+        <div class="row">
 
-    <body>
-        <h1>Login</h1>
-        <form action="/login" method="post">
-            <input type="text" name="email"/>
-            <input type="password" name="password"/>
-            <input type="submit" value="Submit"></input>
-        </form>
-    </body>
-</html>
+            <div class="col s4 offset-s4">
+                <h1 class="center">Login</h1>
+                <form action="/login" method="post">
+                    <input type="text" name="email"/>
+                    <input type="password" name="password"/>
+                    <input type="submit" value="Submit"></input>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+<%- include ../templates/footer.ejs %>
