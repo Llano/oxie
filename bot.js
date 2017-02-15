@@ -31,7 +31,7 @@ Bot.prototype.message = function(data, socket) {
     if(message != null)
     {
         this.nsp.emit('user:message', message);
-        if(message.message.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
+        if(this.currentQuestion != null && message.message.toLowerCase() == (this.currentQuestion.results[0].correct_answer).toLowerCase()) {
             this.onCorrectAnswer(message.message, socket);
         }
     }
@@ -68,7 +68,7 @@ Bot.prototype.formatMessage = function(socket, message) {
 
         //Normal user
         case 0:
-            if(message.length < 800)
+            if(message.length < 200 && message.length > 0)
                 fm = {username: this.people[socket.id].username, message: striptags(message)}
             break;
 
@@ -110,13 +110,14 @@ Bot.prototype.onCorrectAnswer = function(data, socket) {
     this.systemMessageNsp(this.people[socket.id].username + " answered correctly with: " + data);
     this.people[socket.id].points = this.people[socket.id].points + 1;
     this.nsp.emit("user:point", {username: this.people[socket.id].username, id: socket.id, points: this.people[socket.id].points});
-
+	this.currentQuestion = null;
     this.clearTimers();
     this.sendQuestion();
 }
 Bot.prototype.onNoCorrectAnswer = function() {
     this.systemMessageNsp("Correct answer: " + this.currentQuestion.results[0].correct_answer);
     this.clearTimers();
+    this.currentQuestion = null;
     this.sendQuestion();
 
 }
